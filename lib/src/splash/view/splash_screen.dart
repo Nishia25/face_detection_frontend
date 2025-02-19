@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_intelligence/common/config/app_images.dart';
 import 'package:vision_intelligence/common/widgets/app_button.dart';
+import 'package:vision_intelligence/src/auth/view/welcome_screen.dart';
 
 import '../../home/view/home_screen.dart';
 
@@ -35,7 +36,7 @@ class SplashScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                      image: AssetImage(AppImages.splashimg), // Ensure the file exists
+                      image: AssetImage(AppImages.welcomeimg), // Ensure the file exists
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -60,7 +61,7 @@ class SplashScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 AppButton(
-                    onPressed: () => Get.to(HomeScreen()),
+                    onPressed: () => Get.to(WelcomeScreen()),
                     text: "Get Started")
               ],
             ),

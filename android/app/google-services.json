@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "523746350716",
+    "project_id": "visionintelligence-481d8",
+    "storage_bucket": "visionintelligence-481d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523746350716:android:25b177093a6dc90fad9bf9",
+        "android_client_info": {
+          "package_name": "com.example.vision_intelligence"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApCU_pI7wMZ2_QoDNeQzUhtnYfznBv7ng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
