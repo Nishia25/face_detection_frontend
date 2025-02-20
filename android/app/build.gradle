@@ -18,6 +18,12 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    dependencies {
+        // Add this line
+        implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    }
+    apply plugin: 'com.google.gms.google-services'
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }

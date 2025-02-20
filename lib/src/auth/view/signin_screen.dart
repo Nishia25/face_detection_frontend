@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:vision_intelligence/src/auth/view/forget_password_screen.dart';
 import 'package:vision_intelligence/src/auth/view/signup_screen.dart';
 import 'package:vision_intelligence/src/auth/widgets/formtextfield.dart';
+import 'package:vision_intelligence/src/home/view/home_dashboard.dart';
 import '../../../common/theme/theme.dart';
 import '../service/auth_service.dart';
 import '../widgets/custom_scaffold.dart';
@@ -164,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                               if (user != null) {
                                 debugPrint("User Logged In");
-                                Get.offAll(() => HomeScreen());
+                                Get.offAll(() => HomeDashboard());
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text(
@@ -176,7 +178,99 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: const Text('Sign in'),
                         ),
                       ),
-                      const SizedBox(height: 25.0),
+                      const SizedBox(
+                        height: 25.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Divider(
+                              thickness: 0.7,
+                              color: Colors.grey.withOpacity(0.5),
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 0,
+                              horizontal: 10,
+                            ),
+                            child: Text(
+                              'Sign up with',
+                              style: TextStyle(
+                                color: Colors.black45,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Divider(
+                              thickness: 0.7,
+                              color: Colors.grey.withOpacity(0.5),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 25.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            icon: Icon(Bootstrap.google),
+                            onPressed: () async {
+                              final user = await _auth.signInWithGoogle();
+                              if (user != null) {
+                                Get.offAll(() => HomeDashboard());
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Google Sign-In Failed")),
+                                );
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Bootstrap.facebook),
+                            onPressed: () async {
+                              final user = await _auth.signInWithGoogle();
+                              if (user != null) {
+                                Get.offAll(() => HomeDashboard());
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Facebook Sign-In Failed")),
+                                );
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Bootstrap.twitter),
+                            onPressed: () async {
+                              final user = await _auth.signInWithTwitter();
+                              if (user != null) {
+                                Get.offAll(() => HomeDashboard());
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Twitter Sign-In Failed")),
+                                );
+                              }
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Bootstrap.github),
+                            onPressed: () async {
+                              final user = await _auth.signInWithGitHub();
+                              if (user != null) {
+                                Get.offAll(() => HomeDashboard());
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Github Sign-In Failed")),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 35.0),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
