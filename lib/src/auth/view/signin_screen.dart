@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
+import 'package:vision_intelligence/common/widgets/circular_indicator.dart';
 import 'package:vision_intelligence/src/auth/view/forget_password_screen.dart';
 import 'package:vision_intelligence/src/auth/view/signup_screen.dart';
 import 'package:vision_intelligence/src/auth/widgets/formtextfield.dart';
@@ -27,6 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool rememberPassword = true;
   RxBool _isPasswordVisible = false.obs;
+  RxBool isLoading = false.obs;
 
 
   @override
@@ -39,265 +41,186 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      child: Column(
+      child: Stack(
         children: [
-          const Expanded(
-            flex: 1,
-            child: SizedBox(height: 10),
-          ),
-          Expanded(
-            flex: 7,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40.0),
-                  topRight: Radius.circular(40.0),
-                ),
+          Column(
+            children: [
+              const Expanded(
+                flex: 1,
+                child: SizedBox(height: 10),
               ),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formSignInKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Welcome back',
-                        style: TextStyle(
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w900,
-                          color: lightColorScheme.primary,
-                        ),
-                      ),
-                      const SizedBox(height: 40.0),
-
-                      Formtextfield(
-                        controller: _emailController,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter Email';
-                          }
-                          // Regular expression for basic email validation
-                          final emailRegex = RegExp(
-                              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-                          if (!emailRegex.hasMatch(value)) {
-                            return 'Please enter a valid Email';
-                          }
-                          return null;
-                        },
-                        label: 'Email',
-                        hintText: 'Enter Email',
-                      ),
-                      const SizedBox(height: 25.0),
-
-                      Obx(() {
-                        return Formtextfield(
-                          controller: _passwordController,
-                          obscureText: !_isPasswordVisible.value,
-                          obscuringCharacter: '*',
-                          validator: (value) =>
-                          value == null || value.isEmpty
-                              ? 'Please enter Password'
-                              : null,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible.value
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              _isPasswordVisible.value =
-                              !_isPasswordVisible.value;
-                            },
-                          ),
-                          label: 'Password',
-                          hintText: 'Enter Password',
-                        );
-                      }),
-                      const SizedBox(height: 25.0),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Expanded(
+                flex: 7,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(25.0, 50.0, 25.0, 20.0),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40.0),
+                      topRight: Radius.circular(40.0),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formSignInKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: rememberPassword,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    rememberPassword = value!;
-                                  });
+                          Text(
+                            'Welcome back',
+                            style: TextStyle(
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.w900,
+                              color: lightColorScheme.primary,
+                            ),
+                          ),
+                          const SizedBox(height: 40.0),
+
+                          Formtextfield(
+                            controller: _emailController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter Email';
+                              }
+                              final emailRegex = RegExp(
+                                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                              if (!emailRegex.hasMatch(value)) {
+                                return 'Please enter a valid Email';
+                              }
+                              return null;
+                            },
+                            label: 'Email',
+                            hintText: 'Enter Email',
+                          ),
+                          const SizedBox(height: 25.0),
+
+                          Obx(() {
+                            return Formtextfield(
+                              controller: _passwordController,
+                              obscureText: !_isPasswordVisible.value,
+                              obscuringCharacter: '*',
+                              validator: (value) =>
+                              value == null || value.isEmpty
+                                  ? 'Please enter Password'
+                                  : null,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible.value
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () {
+                                  _isPasswordVisible.value =
+                                  !_isPasswordVisible.value;
                                 },
-                                activeColor: lightColorScheme.primary,
                               ),
-                              const Text(
-                                'Remember me',
-                                style: TextStyle(color: Colors.black45),
+                              label: 'Password',
+                              hintText: 'Enter Password',
+                            );
+                          }),
+                          const SizedBox(height: 25.0),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: rememberPassword,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        rememberPassword = value!;
+                                      });
+                                    },
+                                    activeColor: lightColorScheme.primary,
+                                  ),
+                                  const Text(
+                                    'Remember me',
+                                    style: TextStyle(color: Colors.black45),
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.to(ForgotPasswordScreen());
+                                },
+                                child: Text(
+                                  'Forgot password?',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: lightColorScheme.primary,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.to(ForgotPasswordScreen());
-                            },
-                            child: Text(
-                              'Forgot password?',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 25.0),
+                          const SizedBox(height: 25.0),
 
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if (_formSignInKey.currentState!.validate()) {
-                              final user = await _auth
-                                  .loginUserWithEmailAndPassword(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                if (_formSignInKey.currentState!.validate()) {
+                                  isLoading.value = true; // Show loader
 
-                              if (user != null) {
-                                debugPrint("User Logged In");
-                                Get.offAll(() => HomeDashboard());
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text(
-                                      'Invalid email or password')),
-                                );
-                              }
-                            }
-                          },
-                          child: const Text('Sign in'),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 10,
-                            ),
-                            child: Text(
-                              'Sign up with',
-                              style: TextStyle(
-                                color: Colors.black45,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Divider(
-                              thickness: 0.7,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 25.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            icon: Icon(Bootstrap.google),
-                            onPressed: () async {
-                              final user = await _auth.signInWithGoogle();
-                              if (user != null) {
-                                Get.offAll(() => HomeDashboard());
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Google Sign-In Failed")),
-                                );
-                              }
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Bootstrap.facebook),
-                            onPressed: () async {
-                              final user = await _auth.signInWithGoogle();
-                              if (user != null) {
-                                Get.offAll(() => HomeDashboard());
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Facebook Sign-In Failed")),
-                                );
-                              }
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Bootstrap.twitter),
-                            onPressed: () async {
-                              final user = await _auth.signInWithTwitter();
-                              if (user != null) {
-                                Get.offAll(() => HomeDashboard());
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Twitter Sign-In Failed")),
-                                );
-                              }
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Bootstrap.github),
-                            onPressed: () async {
-                              final user = await _auth.signInWithGitHub();
-                              if (user != null) {
-                                Get.offAll(() => HomeDashboard());
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Github Sign-In Failed")),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 35.0),
+                                  final user = await _auth
+                                      .loginUserWithEmailAndPassword(
+                                    _emailController.text,
+                                    _passwordController.text,
+                                  );
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Don\'t have an account? ',
-                            style: TextStyle(color: Colors.black45),
-                          ),
-                          GestureDetector(
-                            onTap: () => Get.to(() => const SignUpScreen()),
-                            child: Text(
-                              'Sign up',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: lightColorScheme.primary,
-                              ),
+                                  isLoading.value = false; // Hide loader
+
+                                  if (user != null) {
+                                    debugPrint("User Logged In");
+                                    Get.to(() => HomeDashboard());
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content:
+                                          Text('Invalid email or password')),
+                                    );
+                                  }
+                                }
+                              },
+                              child: const Text('Sign in'),
                             ),
                           ),
+                          const SizedBox(height: 35.0),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Don\'t have an account? ',
+                                style: TextStyle(color: Colors.black45),
+                              ),
+                              GestureDetector(
+                                onTap: () => Get.to(() => const SignUpScreen()),
+                                child: Text(
+                                  'Sign up',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: lightColorScheme.primary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20.0),
                         ],
                       ),
-                      const SizedBox(height: 20.0),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           ),
+          Obx(() {
+            return isLoading.value
+                ? CircularIndicator(isLoading: true) // Show loader
+                : SizedBox.shrink(); // Hide loader
+          }),
         ],
       ),
     );

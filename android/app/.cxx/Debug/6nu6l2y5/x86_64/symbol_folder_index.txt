@@ -1,0 +1,1 @@
+/Users/nishi/StudioProjects/drownsy_detection/face_detection_frontend/build/app/intermediates/cxx/Debug/6nu6l2y5/obj/x86_64

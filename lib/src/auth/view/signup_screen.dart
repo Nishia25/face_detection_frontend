@@ -25,6 +25,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _vehicleNoController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   bool agreePersonalData = true;
   RxBool _isPasswordVisible = false.obs;
@@ -36,6 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _passwordController.dispose();
     _nameController.dispose();
     _vehicleNoController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
   }
 
   @override
@@ -119,6 +123,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       const SizedBox(height: 20.0),
 
+                      //Phone number
+                      Formtextfield(
+                        controller: _phoneController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter phone number';
+                          }
+                          return null;
+                        },
+                        label: 'Phone No.',
+                        hintText: 'Enter Phone number',
+                      ),
+                      const SizedBox(height: 20.0),
+
+                      //Address
+                      Formtextfield(
+                        controller: _addressController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your address';
+                          }
+                          return null;
+                        },
+                        label: 'Address',
+                        hintText: 'Enter your address',
+                      ),
+                      const SizedBox(height: 20.0),
+
                       // Password
                       Obx(() {
                         return Formtextfield(
@@ -195,6 +227,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       'name': _nameController.text.trim(),
                                       'email': _emailController.text.trim(),
                                       'vehicleNo': _vehicleNoController.text.trim(),
+                                      'phone':_phoneController.text.trim(),
+                                      'address':_addressController.text.trim(),
                                       'uid': user.uid,
                                       'createdAt': Timestamp.now(),
                                     });
