@@ -37,6 +37,8 @@ void requestPermission() async {
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
     print("🔔 Notification clicked: ${message.notification?.title}");
   });
+
+  await updateFCMToken();
 }
 
 // 🔹 Function to update FCM token in Firestore (only after login)
@@ -59,8 +61,10 @@ Future<void> updateFCMToken([String? newToken]) async {
 
   // 🔹 Store token in Firestore (only update if it's different)
   DocumentSnapshot userSnapshot = await userDoc.get();
-  String? storedToken = userSnapshot.exists
-      ? userSnapshot.get('fcmToken') as String?
+  Map<String, dynamic>? userData = userSnapshot.data() as Map<String, dynamic>?;
+
+  String? storedToken = userData != null && userData.containsKey('fcmToken')
+      ? userData['fcmToken']
       : null;
 
   if (storedToken == token) {

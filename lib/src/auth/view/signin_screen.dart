@@ -7,6 +7,7 @@ import 'package:vision_intelligence/src/auth/view/forget_password_screen.dart';
 import 'package:vision_intelligence/src/auth/view/signup_screen.dart';
 import 'package:vision_intelligence/src/auth/widgets/formtextfield.dart';
 import 'package:vision_intelligence/src/home/view/home_dashboard.dart';
+import 'package:vision_intelligence/src/main/view/main_screen.dart';
 import '../../../common/theme/theme.dart';
 import '../service/auth_service.dart';
 import '../widgets/custom_scaffold.dart';
@@ -173,7 +174,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                                   if (user != null) {
                                     debugPrint("User Logged In");
-                                    Get.to(() => HomeDashboard());
+                                    Get.offAll(() => MainScreen());
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
