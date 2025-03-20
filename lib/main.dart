@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:vision_intelligence/common/controller/userdata_controller.dart';
 import 'package:vision_intelligence/firebase/request_permission.dart';
+import 'package:vision_intelligence/src/accounts/controller/account_controller.dart';
 import 'package:vision_intelligence/src/auth/service/auth_service.dart';
 import 'package:vision_intelligence/src/auth/view/welcome_screen.dart';
 import 'package:vision_intelligence/src/home/controller/home_controller.dart';
@@ -66,6 +67,7 @@ class AllControllerBinding extends Bindings {
     Get.lazyPut(() => MainController());
     Get.lazyPut(() => UserdataController());
     Get.lazyPut(() => HomeController());
+    Get.lazyPut(() => AccountController());
   }
 }
 

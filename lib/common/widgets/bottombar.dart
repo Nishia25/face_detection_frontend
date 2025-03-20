@@ -55,7 +55,7 @@ class Bottombar extends StatelessWidget {
               icon: Icons.bookmark_border_outlined,
               leading: Icon(
                 Icons.route_outlined,
-                color: selectedIndex == 1 ? Colors.white : Color.fromRGBO(117, 117, 117, 1),
+                color: selectedIndex == 2 ? Colors.white : Color.fromRGBO(117, 117, 117, 1),
               ), // No leading ImageIcon here, default icon used.
               text: 'Route',
             ),
