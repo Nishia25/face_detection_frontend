@@ -64,7 +64,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                         const SizedBox(height: 20), // Space below "Driver" text
                         Container(
                           width: double.infinity,
-                          height: 500,
+                          height: MediaQuery.of(context).size.height * 0.6,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),

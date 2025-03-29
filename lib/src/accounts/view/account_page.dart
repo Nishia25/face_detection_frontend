@@ -40,109 +40,109 @@ class _AccountPageState extends State<AccountPage> {
                     topRight: Radius.circular(50)
                   )
                 ),
+                child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                 child: SingleChildScrollView(
-              child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSectionTitle("Accounts"),
-                  SizedBox(height: 5,),
-                  SettingOptions(
-                    icon: Icon(
-                      Icons.person_outline,
-                    ),
-                    title: "My Profile",
-                    onTap: () {
-                      Get.to(() => Myprofile());
-                    },
-                  ),
-                  SettingOptions(
-                    icon: ImageIcon(
-                      AssetImage(AppImages.password_icon,),
-                      color: Colors.black,
-                    ),
-                    title: "Change Password",
-                    onTap: () {
-                      Get.to(() => ChangePassword());
-                    },
-                  ),
-                  SettingOptions(
-                    icon: ImageIcon(
-                      AssetImage(AppImages.delete_icon),
-                      color: Colors.black,
-                    ),
-                    title: "Delete Account",
-                    onTap: () {
-                      Get.to(() => DeleteAccount());
-                    },
-                  ),
-                  SettingOptions(
-                    icon: ImageIcon(
-                      AssetImage(AppImages.notification_icon),
-                      color: Colors.black,
-                    ),
-                    title: "Notification",
-                    trailing: Obx(() {
-                      return Transform.scale(
-                        scale: 0.8,
-                        child: Switch.adaptive(
-                          value: accountController.lights.value,
-                          onChanged: (bool value) {
-                            accountController.lights.value = value;
-                          },
-                          activeTrackColor: Color.fromRGBO(237, 29, 36, 1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSectionTitle("Accounts"),
+                      SizedBox(height: 5,),
+                      SettingOptions(
+                        icon: Icon(
+                          Icons.person_outline,
                         ),
-                      );
-                    }),
-                  ),
-                  SizedBox(height: 10,),
-                  _buildSectionTitle("Help & Support"),
-                  SizedBox(height: 15,),
-                  SettingOptions(
-                    icon: Icon(
-                      Icons.person_search_outlined,
-                    ),
-                    title: "About Us",
-                    onTap: () {
-                      Get.to(() => AboutUs());
-                    },
-                  ),
-                  SettingOptions(
-                    icon: Icon(
-                      Icons.file_copy_outlined,
-                    ),
-                    title: "Terms & Conditions",
-                    onTap: () {
-                      Get.to(() => TermsConditions());
-                    },
-                  ),
-                  SettingOptions(
-                    icon: ImageIcon(
-                      AssetImage(AppImages.contact_icon),
-                      color: Colors.black,
-                      size: 24,
-                    ),
-                    title: "Contact Us",
-                    onTap: () {
-                      Get.to(() => ContactUs());
-                    },
-                  ),
-                  SettingOptions(
-                      icon: Icon(
-                        Icons.logout_outlined,
-                        size: 24,
-                        color: Colors.black,
+                        title: "My Profile",
+                        onTap: () {
+                          // Get.to(() => Myprofile());
+                        },
                       ),
-                      title: "Logout",
-                      onTap : () {
-                        // signOut();
-                      }
-                  )
-                ],
-              ),
-            ),
-      ),
+                      SettingOptions(
+                        icon: ImageIcon(
+                          AssetImage(AppImages.password_icon,),
+                          color: Colors.black,
+                        ),
+                        title: "Change Password",
+                        onTap: () {
+                          Get.to(() => ChangePassword());
+                        },
+                      ),
+                      SettingOptions(
+                        icon: ImageIcon(
+                          AssetImage(AppImages.delete_icon),
+                          color: Colors.black,
+                        ),
+                        title: "Delete Account",
+                        onTap: () {
+                          Get.to(() => DeleteAccount());
+                        },
+                      ),
+                      SettingOptions(
+                        icon: ImageIcon(
+                          AssetImage(AppImages.notification_icon),
+                          color: Colors.black,
+                        ),
+                        title: "Notification",
+                        trailing: Obx(() {
+                          return Transform.scale(
+                            scale: 0.8,
+                            child: Switch.adaptive(
+                              value: accountController.lights.value,
+                              onChanged: (bool value) {
+                                accountController.lights.value = value;
+                              },
+                              activeTrackColor: Color.fromRGBO(237, 29, 36, 1),
+                            ),
+                          );
+                        }),
+                      ),
+                      SizedBox(height: 10,),
+                      _buildSectionTitle("Help & Support"),
+                      SizedBox(height: 15,),
+                      SettingOptions(
+                        icon: Icon(
+                          Icons.person_search_outlined,
+                        ),
+                        title: "About Us",
+                        onTap: () {
+                          Get.to(() => AboutUs());
+                        },
+                      ),
+                      SettingOptions(
+                        icon: Icon(
+                          Icons.file_copy_outlined,
+                        ),
+                        title: "Terms & Conditions",
+                        onTap: () {
+                          Get.to(() => TermsConditions());
+                        },
+                      ),
+                      SettingOptions(
+                        icon: ImageIcon(
+                          AssetImage(AppImages.contact_icon),
+                          color: Colors.black,
+                          size: 24,
+                        ),
+                        title: "Contact Us",
+                        onTap: () {
+                          Get.to(() => ContactUs());
+                        },
+                      ),
+                      SettingOptions(
+                          icon: Icon(
+                            Icons.logout_outlined,
+                            size: 24,
+                            color: Colors.black,
+                          ),
+                          title: "Logout",
+                          onTap : () {
+                            // signOut();
+                          }
+                      )
+                    ],
+                  ),
+                ),
+                            ),
               ),
             )
           ],
