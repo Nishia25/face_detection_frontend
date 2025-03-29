@@ -23,7 +23,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color.fromRGBO(237, 29, 36, 1),
+      backgroundColor: Colors.grey[850],
       elevation: 0.0,
       toolbarHeight: 80,
       title: Text(
@@ -56,8 +56,8 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
           ),
       ],
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          color: Color.fromRGBO(237, 29, 36, 1),
+        decoration: BoxDecoration(
+          color: Colors.grey[850],
         ),
       ),
     );
