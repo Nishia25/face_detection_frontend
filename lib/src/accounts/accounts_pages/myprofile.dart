@@ -141,7 +141,7 @@ class Myprofile extends StatelessWidget {
                                 controller: controller.addressController,
                                 focusNode: controller.addressFocusNode,
                                 enabled: controller.isEditing.value,
-                                maxLines: 3,
+                                maxLines: 2,
                                 decoration: InputDecoration(
                                   labelText: 'Address',
                                   border: const OutlineInputBorder(),

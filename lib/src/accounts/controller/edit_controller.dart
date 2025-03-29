@@ -4,11 +4,13 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
 import '../../../common/utils/upload_image.dart';
 
 class EditController extends GetxController {
   final UploadImage _uploadImage = UploadImage();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   
   // Controllers
   final TextEditingController fnameController = TextEditingController();
@@ -29,6 +31,7 @@ class EditController extends GetxController {
   final RxBool isLoading = false.obs;
   final Rx<File?> image = Rx<File?>(null);
   final RxString imageUrl = ''.obs;
+  final RxString currentEmail = ''.obs;
 
   // Validation error messages
   final RxString nameError = ''.obs;
@@ -111,7 +114,7 @@ class EditController extends GetxController {
       addressError.value = 'Address is required';
       return false;
     }
-    if (value.length < 10) {
+    if (value.length < 2) {
       addressError.value = 'Address must be at least 10 characters';
       return false;
     }
@@ -125,10 +128,10 @@ class EditController extends GetxController {
       return false;
     }
     // Indian vehicle number format: XX-XX-XXXX or XX-XXXX-XXXX
-    if (!RegExp(r'^[A-Z]{2}[-\s]?[0-9]{2}[-\s]?[A-Z0-9]{4}$').hasMatch(value)) {
-      vehicleError.value = 'Please enter a valid vehicle number';
-      return false;
-    }
+    // if (!RegExp(r'^[A-Z]{2}[-\s]?[0-9]{2}[-\s]?[A-Z0-9]{4}$').hasMatch(value)) {
+    //   vehicleError.value = 'Please enter a valid vehicle number';
+    //   return false;
+    // }
     vehicleError.value = '';
     return true;
   }
@@ -161,6 +164,7 @@ class EditController extends GetxController {
           
           fnameController.text = data['name'] ?? '';
           emailController.text = data['email'] ?? '';
+          currentEmail.value = data['email'] ?? '';
           phoneController.text = data['phone'] ?? '';
           addressController.text = data['address'] ?? '';
           vehicleController.text = data['vehicleNo'] ?? '';
@@ -240,6 +244,18 @@ class EditController extends GetxController {
       final userId = prefs.getString('user_id');
 
       if (userId != null) {
+        // Check if email has changed
+        if (emailController.text.trim() != currentEmail.value) {
+          // Update email in Firebase Authentication
+          User? user = _auth.currentUser;
+          if (user != null) {
+            await user.updateEmail(emailController.text.trim());
+            // Reauthenticate user to ensure the change is applied
+            await user.reload();
+          }
+        }
+
+        // Update Firestore data
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userId)
@@ -252,10 +268,15 @@ class EditController extends GetxController {
           'updatedAt': Timestamp.now(),
         });
 
+        // Update current email
+        currentEmail.value = emailController.text.trim();
+
         isEditing.value = false;
         Get.snackbar(
           'Success',
           'Profile updated successfully',
+          colorText: Colors.white,
+          backgroundColor: Colors.green,
           snackPosition: SnackPosition.BOTTOM,
         );
       }
