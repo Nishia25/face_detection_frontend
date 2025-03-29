@@ -30,6 +30,13 @@ class EditController extends GetxController {
   final Rx<File?> image = Rx<File?>(null);
   final RxString imageUrl = ''.obs;
 
+  // Validation error messages
+  final RxString nameError = ''.obs;
+  final RxString emailError = ''.obs;
+  final RxString phoneError = ''.obs;
+  final RxString addressError = ''.obs;
+  final RxString vehicleError = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -53,6 +60,89 @@ class EditController extends GetxController {
     vehicleFocusNode.dispose();
 
     super.onClose();
+  }
+
+  // Validation methods
+  bool validateName(String value) {
+    if (value.isEmpty) {
+      nameError.value = 'Name is required';
+      return false;
+    }
+    if (value.length < 2) {
+      nameError.value = 'Name must be at least 2 characters';
+      return false;
+    }
+    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
+      nameError.value = 'Name can only contain letters and spaces';
+      return false;
+    }
+    nameError.value = '';
+    return true;
+  }
+
+  bool validateEmail(String value) {
+    if (value.isEmpty) {
+      emailError.value = 'Email is required';
+      return false;
+    }
+    if (!GetUtils.isEmail(value)) {
+      emailError.value = 'Please enter a valid email';
+      return false;
+    }
+    emailError.value = '';
+    return true;
+  }
+
+  bool validatePhone(String value) {
+    if (value.isEmpty) {
+      phoneError.value = 'Phone number is required';
+      return false;
+    }
+    if (!RegExp(r'^[0-9]{10}$').hasMatch(value)) {
+      phoneError.value = 'Please enter a valid 10-digit phone number';
+      return false;
+    }
+    phoneError.value = '';
+    return true;
+  }
+
+  bool validateAddress(String value) {
+    if (value.isEmpty) {
+      addressError.value = 'Address is required';
+      return false;
+    }
+    if (value.length < 10) {
+      addressError.value = 'Address must be at least 10 characters';
+      return false;
+    }
+    addressError.value = '';
+    return true;
+  }
+
+  bool validateVehicle(String value) {
+    if (value.isEmpty) {
+      vehicleError.value = 'Vehicle number is required';
+      return false;
+    }
+    // Indian vehicle number format: XX-XX-XXXX or XX-XXXX-XXXX
+    if (!RegExp(r'^[A-Z]{2}[-\s]?[0-9]{2}[-\s]?[A-Z0-9]{4}$').hasMatch(value)) {
+      vehicleError.value = 'Please enter a valid vehicle number';
+      return false;
+    }
+    vehicleError.value = '';
+    return true;
+  }
+
+  bool validateAllFields() {
+    bool isValid = true;
+    
+    isValid &= validateName(fnameController.text);
+    isValid &= validateEmail(emailController.text);
+    isValid &= validatePhone(phoneController.text);
+    isValid &= validateAddress(addressController.text);
+    isValid &= validateVehicle(vehicleController.text);
+    
+    return isValid;
   }
 
   Future<void> loadUserData() async {
@@ -140,6 +230,10 @@ class EditController extends GetxController {
   }
 
   Future<void> updateUserData() async {
+    if (!validateAllFields()) {
+      return;
+    }
+
     try {
       isLoading.value = true;
       final prefs = await SharedPreferences.getInstance();

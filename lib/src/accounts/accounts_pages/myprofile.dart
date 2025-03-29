@@ -38,7 +38,7 @@ class Myprofile extends StatelessWidget {
         ),
         body: Container(
           decoration: BoxDecoration(
-            color: Colors.grey[700],
+            color: Colors.grey[850],
           ),
           child: Container(
             width: double.infinity,
@@ -78,17 +78,17 @@ class Myprofile extends StatelessWidget {
                                 Obx(() => controller.isEditing.value
                                     ? Positioned(
                                         bottom: 0,
-                                        right: 0,
+                                        right: 10,
                                         child: Container(
                                           padding: const EdgeInsets.all(4),
                                           decoration: BoxDecoration(
-                                            color: Colors.blue,
+                                            color: Colors.black,
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(
                                             Icons.camera_alt,
                                             color: Colors.white,
-                                            size: 20,
+                                            size: 30,
                                           ),
                                         ),
                                       )
@@ -97,54 +97,73 @@ class Myprofile extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 30),
-                          Obx(() => TextField(
-                            controller: controller.fnameController,
-                            focusNode: controller.firstNameFocusNode,
-                            enabled: controller.isEditing.value,
-                            decoration: const InputDecoration(
-                              labelText: 'Full Name',
-                              border: OutlineInputBorder(),
-                            ),
-                          )),
-                          const SizedBox(height: 8),
-                          Obx(() => TextField(
-                            controller: controller.emailController,
-                            focusNode: controller.emailFocusNode,
-                            enabled: controller.isEditing.value,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
-                              border: OutlineInputBorder(),
-                            ),
-                          )),
-                          const SizedBox(height: 8),
-                          Obx(() => TextField(
-                            controller: controller.phoneController,
-                            focusNode: controller.phoneFocusNode,
-                            enabled: controller.isEditing.value,
-                            decoration: const InputDecoration(
-                              labelText: 'Phone',
-                              border: OutlineInputBorder(),
-                            ),
-                          )),
-                          const SizedBox(height: 8),
-                          Obx(() => TextField(
-                            controller: controller.addressController,
-                            focusNode: controller.addressFocusNode,
-                            enabled: controller.isEditing.value,
-                            decoration: const InputDecoration(
-                              labelText: 'Address',
-                              border: OutlineInputBorder(),
-                            ),
-                          )),
-                          const SizedBox(height: 8),
-                          Obx(() => TextField(
-                            controller: controller.vehicleController,
-                            focusNode: controller.vehicleFocusNode,
-                            enabled: controller.isEditing.value,
-                            decoration: const InputDecoration(
-                              labelText: 'Vehicle Number',
-                              border: OutlineInputBorder(),
-                            ),
+                          Obx(() => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextField(
+                                controller: controller.fnameController,
+                                focusNode: controller.firstNameFocusNode,
+                                enabled: controller.isEditing.value,
+                                decoration: InputDecoration(
+                                  labelText: 'Full Name',
+                                  border: const OutlineInputBorder(),
+                                  errorText: controller.nameError.value.isEmpty ? null : controller.nameError.value,
+                                ),
+                                onChanged: (value) => controller.validateName(value),
+                              ),
+                              const SizedBox(height: 18),
+                              TextField(
+                                controller: controller.emailController,
+                                focusNode: controller.emailFocusNode,
+                                enabled: controller.isEditing.value,
+                                decoration: InputDecoration(
+                                  labelText: 'Email',
+                                  border: const OutlineInputBorder(),
+                                  errorText: controller.emailError.value.isEmpty ? null : controller.emailError.value,
+                                ),
+                                onChanged: (value) => controller.validateEmail(value),
+                              ),
+                              const SizedBox(height: 18),
+                              TextField(
+                                controller: controller.phoneController,
+                                focusNode: controller.phoneFocusNode,
+                                enabled: controller.isEditing.value,
+                                keyboardType: TextInputType.phone,
+                                decoration: InputDecoration(
+                                  labelText: 'Phone',
+                                  border: const OutlineInputBorder(),
+                                  errorText: controller.phoneError.value.isEmpty ? null : controller.phoneError.value,
+                                ),
+                                onChanged: (value) => controller.validatePhone(value),
+                              ),
+                              const SizedBox(height: 18),
+                              TextField(
+                                controller: controller.addressController,
+                                focusNode: controller.addressFocusNode,
+                                enabled: controller.isEditing.value,
+                                maxLines: 3,
+                                decoration: InputDecoration(
+                                  labelText: 'Address',
+                                  border: const OutlineInputBorder(),
+                                  errorText: controller.addressError.value.isEmpty ? null : controller.addressError.value,
+                                ),
+                                onChanged: (value) => controller.validateAddress(value),
+                              ),
+                              const SizedBox(height: 18),
+                              TextField(
+                                controller: controller.vehicleController,
+                                focusNode: controller.vehicleFocusNode,
+                                enabled: controller.isEditing.value,
+                                textCapitalization: TextCapitalization.characters,
+                                decoration: InputDecoration(
+                                  labelText: 'Vehicle Number',
+                                  border: const OutlineInputBorder(),
+                                  errorText: controller.vehicleError.value.isEmpty ? null : controller.vehicleError.value,
+                                  hintText: 'XX-XX-XXXX or XX-XXXX-XXXX',
+                                ),
+                                onChanged: (value) => controller.validateVehicle(value),
+                              ),
+                            ],
                           )),
                         ],
                       ),
