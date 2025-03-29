@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:hive/hive.dart';
 import '../controller/edit_controller.dart';
+import '../../../common/widgets/appbar.dart';
 
 import '../../../common/config/app_images.dart';
 import '../../../common/utils/upload_image.dart';
@@ -20,21 +21,20 @@ class Myprofile extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text("My Profile"),
-          backgroundColor: Colors.grey[850],
-          actions: [
-            IconButton(
-              icon: Obx(() => Icon(controller.isEditing.value ? Icons.save : Icons.edit)),
-              onPressed: () {
-                if (controller.isEditing.value) {
-                  controller.updateUserData();
-                } else {
-                  controller.toggleEditMode();
-                }
-              },
-            ),
-          ],
+        appBar: Appbar(
+          title: "My Profile",
+          showBackButton: true,
+          reactiveIcon: Obx(() => Icon(
+            controller.isEditing.value ? Icons.save : Icons.edit,
+            color: Colors.white,
+          )),
+          onIconPressed: () {
+            if (controller.isEditing.value) {
+              controller.updateUserData();
+            } else {
+              controller.toggleEditMode();
+            }
+          },
         ),
         body: Container(
           decoration: BoxDecoration(
