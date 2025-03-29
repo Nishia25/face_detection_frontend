@@ -22,7 +22,7 @@ class Myprofile extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text("My Profile"),
-          backgroundColor: Color.fromRGBO(58, 57, 57, 0.094),
+          backgroundColor: Colors.grey[850],
           actions: [
             IconButton(
               icon: Obx(() => Icon(controller.isEditing.value ? Icons.save : Icons.edit)),
@@ -37,8 +37,8 @@ class Myprofile extends StatelessWidget {
           ],
         ),
         body: Container(
-          decoration: const BoxDecoration(
-            color: Color.fromRGBO(58, 57, 57, 0.094),
+          decoration: BoxDecoration(
+            color: Colors.grey[700],
           ),
           child: Container(
             width: double.infinity,
@@ -70,10 +70,10 @@ class Myprofile extends StatelessWidget {
                                           ? NetworkImage(controller.imageUrl.value) as ImageProvider
                                           : null),
                                   backgroundColor: Colors.grey[300],
+                                  radius: 70.5,
                                   child: (controller.image.value == null && controller.imageUrl.value.isEmpty)
                                       ? const Icon(Icons.camera_alt, color: Colors.white)
                                       : null,
-                                  radius: 70.5,
                                 )),
                                 Obx(() => controller.isEditing.value
                                     ? Positioned(

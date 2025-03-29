@@ -1,17 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:icons_plus/icons_plus.dart';
 import 'package:vision_intelligence/common/widgets/circular_indicator.dart';
 import 'package:vision_intelligence/src/auth/view/forget_password_screen.dart';
 import 'package:vision_intelligence/src/auth/view/signup_screen.dart';
 import 'package:vision_intelligence/src/auth/widgets/formtextfield.dart';
-import 'package:vision_intelligence/src/home/view/home_dashboard.dart';
 import 'package:vision_intelligence/src/main/view/main_screen.dart';
 import '../../../common/theme/theme.dart';
 import '../service/auth_service.dart';
 import '../widgets/custom_scaffold.dart';
-import '../../home/view/home_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
