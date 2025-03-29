@@ -36,7 +36,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _addressController = TextEditingController();
 
   bool agreePersonalData = true;
-  RxBool _isPasswordVisible = false.obs;
+  final RxBool _isPasswordVisible = false.obs;
   RxBool isLoading = false.obs;
 
   final UploadImage _uploadImage = UploadImage();

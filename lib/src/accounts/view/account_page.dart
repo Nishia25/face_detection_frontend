@@ -54,7 +54,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         title: "My Profile",
                         onTap: () {
-                          // Get.to(() => Myprofile());
+                          Get.to(() => Myprofile());
                         },
                       ),
                       SettingOptions(

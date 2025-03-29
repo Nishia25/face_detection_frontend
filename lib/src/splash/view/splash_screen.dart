@@ -4,7 +4,6 @@ import 'package:vision_intelligence/common/config/app_images.dart';
 import 'package:vision_intelligence/common/widgets/app_button.dart';
 import 'package:vision_intelligence/src/auth/view/welcome_screen.dart';
 
-import '../../home/view/home_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

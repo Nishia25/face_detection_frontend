@@ -28,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool rememberPassword = true;
-  RxBool _isPasswordVisible = false.obs;
+  final RxBool _isPasswordVisible = false.obs;
   RxBool isLoading = false.obs;
 
 
