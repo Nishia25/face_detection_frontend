@@ -246,12 +246,58 @@ class EditController extends GetxController {
       if (userId != null) {
         // Check if email has changed
         if (emailController.text.trim() != currentEmail.value) {
+          // Show confirmation dialog
+          bool? shouldProceed = await Get.dialog<bool>(
+            AlertDialog(
+              title: const Text('Email Change Required'),
+              content: const Text(
+                'To change your email, you will need to verify the new email address. '
+                'A verification link will be sent to your new email. '
+                'Please check your inbox and click the verification link before logging in again.'
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Get.back(result: false),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Get.back(result: true),
+                  child: const Text('Proceed'),
+                ),
+              ],
+            ),
+          );
+
+          if (shouldProceed != true) {
+            isLoading.value = false;
+            return;
+          }
+
           // Update email in Firebase Authentication
           User? user = _auth.currentUser;
           if (user != null) {
-            await user.updateEmail(emailController.text.trim());
-            // Reauthenticate user to ensure the change is applied
-            await user.reload();
+            // Send verification email
+            await user.verifyBeforeUpdateEmail(emailController.text.trim());
+            
+            // Sign out the user
+            await _auth.signOut();
+            
+            // Clear shared preferences
+            await prefs.clear();
+            
+            Get.snackbar(
+              'Verification Required',
+              'Please check your new email for verification link. '
+              'You will need to verify your email before logging in again.',
+              duration: const Duration(seconds: 5),
+              colorText: Colors.white,
+              backgroundColor: Colors.orange,
+              snackPosition: SnackPosition.BOTTOM,
+            );
+            
+            // Navigate to login screen
+            Get.offAllNamed('/login');
+            return;
           }
         }
 
