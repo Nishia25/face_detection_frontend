@@ -101,18 +101,6 @@ class Myprofile extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TextField(
-                                controller: controller.fnameController,
-                                focusNode: controller.firstNameFocusNode,
-                                enabled: controller.isEditing.value,
-                                decoration: InputDecoration(
-                                  labelText: 'Full Name',
-                                  border: const OutlineInputBorder(),
-                                  errorText: controller.nameError.value.isEmpty ? null : controller.nameError.value,
-                                ),
-                                onChanged: (value) => controller.validateName(value),
-                              ),
-                              const SizedBox(height: 18),
-                              TextField(
                                 controller: controller.emailController,
                                 focusNode: controller.emailFocusNode,
                                 enabled: false,
@@ -123,6 +111,18 @@ class Myprofile extends StatelessWidget {
                                   prefixIcon: const Icon(Icons.email),
                                   errorText: controller.emailError.value.isEmpty ? null : controller.emailError.value,
                                 ),
+                              ),
+                              const SizedBox(height: 18),
+                              TextField(
+                                controller: controller.fnameController,
+                                focusNode: controller.firstNameFocusNode,
+                                enabled: controller.isEditing.value,
+                                decoration: InputDecoration(
+                                  labelText: 'Full Name',
+                                  border: const OutlineInputBorder(),
+                                  errorText: controller.nameError.value.isEmpty ? null : controller.nameError.value,
+                                ),
+                                onChanged: (value) => controller.validateName(value),
                               ),
                               const SizedBox(height: 18),
                               TextField(
