@@ -287,8 +287,11 @@ class EditController extends GetxController {
                 'updatedAt': Timestamp.now(),
               });
 
-              // Then send verification email
-              await user.verifyBeforeUpdateEmail(emailController.text.trim());
+              // Send verification email using a different method
+              await user.updateEmail(emailController.text.trim());
+              
+              // Send verification email manually
+              await user.sendEmailVerification();
               
               // Sign out the user
               await _auth.signOut();
