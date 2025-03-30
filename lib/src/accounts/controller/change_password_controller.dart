@@ -15,6 +15,11 @@ class ChangePasswordController extends GetxController {
   final RxString oldPasswordError = ''.obs;
   final RxString newPasswordError = ''.obs;
   final RxString confirmPasswordError = ''.obs;
+  
+  // Password visibility states
+  final RxBool isOldPasswordVisible = false.obs;
+  final RxBool isNewPasswordVisible = false.obs;
+  final RxBool isConfirmPasswordVisible = false.obs;
 
   @override
   void onClose() {
@@ -25,6 +30,19 @@ class ChangePasswordController extends GetxController {
     newPasswordFocusNode.dispose();
     confirmPasswordFocusNode.dispose();
     super.onClose();
+  }
+
+  // Password visibility toggle methods
+  void toggleOldPasswordVisibility() {
+    isOldPasswordVisible.value = !isOldPasswordVisible.value;
+  }
+
+  void toggleNewPasswordVisibility() {
+    isNewPasswordVisible.value = !isNewPasswordVisible.value;
+  }
+
+  void toggleConfirmPasswordVisibility() {
+    isConfirmPasswordVisible.value = !isConfirmPasswordVisible.value;
   }
 
   bool validateOldPassword(String value) {
