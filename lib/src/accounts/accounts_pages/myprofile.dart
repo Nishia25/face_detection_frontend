@@ -119,6 +119,7 @@ class Myprofile extends StatelessWidget {
                                 keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
                                   labelText: 'Email',
+                                  border: const OutlineInputBorder(),
                                   prefixIcon: const Icon(Icons.email),
                                   errorText: controller.emailError.value.isEmpty ? null : controller.emailError.value,
                                 ),
