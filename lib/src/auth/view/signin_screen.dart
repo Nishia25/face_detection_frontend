@@ -8,6 +8,7 @@ import 'package:vision_intelligence/src/main/view/main_screen.dart';
 import '../../../common/theme/theme.dart';
 import '../service/auth_service.dart';
 import '../widgets/custom_scaffold.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -160,23 +161,45 @@ class _SignInScreenState extends State<SignInScreen> {
                                 if (_formSignInKey.currentState!.validate()) {
                                   isLoading.value = true; // Show loader
 
-                                  final user = await _auth
-                                      .loginUserWithEmailAndPassword(
-                                    _emailController.text,
-                                    _passwordController.text,
-                                  );
+                                  try {
+                                    final user = await _auth.loginUserWithEmailAndPassword(
+                                      _emailController.text,
+                                      _passwordController.text,
+                                    );
 
-                                  isLoading.value = false; // Hide loader
-
-                                  if (user != null) {
-                                    debugPrint("User Logged In");
-                                    Get.offAll(() => MainScreen());
-                                  } else {
+                                    if (user != null) {
+                                      debugPrint("User Logged In");
+                                      Get.offAll(() => MainScreen());
+                                    }
+                                  } on FirebaseAuthException catch (e) {
+                                    String message = 'Invalid email or password';
+                                    if (e.code == 'user-not-found') {
+                                      message = 'No user found with this email. Please sign up first.';
+                                    } else if (e.code == 'wrong-password') {
+                                      message = 'Wrong password. Please try again.';
+                                    } else if (e.code == 'invalid-email') {
+                                      message = 'Invalid email format. Please check your email.';
+                                    } else if (e.code == 'user-disabled') {
+                                      message = 'This account has been disabled. Please contact support.';
+                                    }
+                                    
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(message),
+                                        backgroundColor: Colors.red,
+                                        duration: const Duration(seconds: 3),
+                                      ),
+                                    );
+                                  } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                          content:
-                                          Text('Invalid email or password')),
+                                        content: Text('An error occurred. Please try again.'),
+                                        backgroundColor: Colors.red,
+                                        duration: Duration(seconds: 3),
+                                      ),
                                     );
+                                  } finally {
+                                    isLoading.value = false; // Hide loader
                                   }
                                 }
                               },
