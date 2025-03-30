@@ -276,38 +276,61 @@ class EditController extends GetxController {
           // Update email in Firebase Authentication
           User? user = _auth.currentUser;
           if (user != null) {
-            // Send verification email
-            await user.verifyBeforeUpdateEmail(emailController.text.trim());
-            
-            // Sign out the user
-            await _auth.signOut();
-            
-            // Clear shared preferences
-            await prefs.clear();
-            
-            Get.snackbar(
-              'Verification Required',
-              'Please check your new email for verification link. '
-              'You will need to verify your email before logging in again.',
-              duration: const Duration(seconds: 5),
-              colorText: Colors.white,
-              backgroundColor: Colors.orange,
-              snackPosition: SnackPosition.BOTTOM,
-            );
-            
-            // Navigate to login screen
-            Get.offAllNamed('/login');
-            return;
+            try {
+              // First update the email in Firestore
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userId)
+                  .update({
+                'email': emailController.text.trim(),
+                'emailVerified': false,
+                'updatedAt': Timestamp.now(),
+              });
+
+              // Then send verification email
+              await user.verifyBeforeUpdateEmail(emailController.text.trim());
+              
+              // Sign out the user
+              await _auth.signOut();
+              
+              // Clear shared preferences
+              await prefs.clear();
+              
+              Get.snackbar(
+                'Verification Required',
+                'Please check your new email for verification link. '
+                'You will need to verify your email before logging in again.',
+                duration: const Duration(seconds: 5),
+                colorText: Colors.white,
+                backgroundColor: Colors.orange,
+                snackPosition: SnackPosition.BOTTOM,
+              );
+              
+              // Navigate to login screen
+              Get.offAllNamed('/login');
+              return;
+            } catch (e) {
+              print('Error during email update: $e');
+              // Revert Firestore changes if verification fails
+              await FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(userId)
+                  .update({
+                'email': currentEmail.value,
+                'emailVerified': true,
+                'updatedAt': Timestamp.now(),
+              });
+              throw e;
+            }
           }
         }
 
-        // Update Firestore data
+        // Update other Firestore data
         await FirebaseFirestore.instance
             .collection('users')
             .doc(userId)
             .update({
           'name': fnameController.text.trim(),
-          'email': emailController.text.trim(),
           'phone': phoneController.text.trim(),
           'address': addressController.text.trim(),
           'vehicleNo': vehicleController.text.trim(),
@@ -330,7 +353,8 @@ class EditController extends GetxController {
       print('Error updating user data: $e');
       Get.snackbar(
         'Error',
-        'Failed to update profile',
+        'Failed to update profile: ${e.toString()}',
+        duration: const Duration(seconds: 5),
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {
