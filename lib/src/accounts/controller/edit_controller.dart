@@ -251,9 +251,7 @@ class EditController extends GetxController {
             AlertDialog(
               title: const Text('Email Change Required'),
               content: const Text(
-                'To change your email, you will need to verify the new email address. '
-                'A verification link will be sent to your new email. '
-                'Please check your inbox and click the verification link before logging in again.'
+                'Your email will be updated. You will need to use the new email for future logins.'
               ),
               actions: [
                 TextButton(
@@ -273,58 +271,30 @@ class EditController extends GetxController {
             return;
           }
 
-          // Update email in Firebase Authentication
-          User? user = _auth.currentUser;
-          if (user != null) {
-            try {
-              // First update the email in Firestore
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(userId)
-                  .update({
-                'email': emailController.text.trim(),
-                'emailVerified': false,
-                'updatedAt': Timestamp.now(),
-              });
+          try {
+            // Update email in Firestore only
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userId)
+                .update({
+              'email': emailController.text.trim(),
+              'updatedAt': Timestamp.now(),
+            });
 
-              // Send verification email using a different method
-              await user.updateEmail(emailController.text.trim());
-              
-              // Send verification email manually
-              await user.sendEmailVerification();
-              
-              // Sign out the user
-              await _auth.signOut();
-              
-              // Clear shared preferences
-              await prefs.clear();
-              
-              Get.snackbar(
-                'Verification Required',
-                'Please check your new email for verification link. '
-                'You will need to verify your email before logging in again.',
-                duration: const Duration(seconds: 5),
-                colorText: Colors.white,
-                backgroundColor: Colors.orange,
-                snackPosition: SnackPosition.BOTTOM,
-              );
-              
-              // Navigate to login screen
-              Get.offAllNamed('/login');
-              return;
-            } catch (e) {
-              print('Error during email update: $e');
-              // Revert Firestore changes if verification fails
-              await FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(userId)
-                  .update({
-                'email': currentEmail.value,
-                'emailVerified': true,
-                'updatedAt': Timestamp.now(),
-              });
-              throw e;
-            }
+            // Update current email
+            currentEmail.value = emailController.text.trim();
+
+            Get.snackbar(
+              'Success',
+              'Email updated successfully. Please use the new email for future logins.',
+              duration: const Duration(seconds: 5),
+              colorText: Colors.white,
+              backgroundColor: Colors.green,
+              snackPosition: SnackPosition.BOTTOM,
+            );
+          } catch (e) {
+            print('Error updating email in Firestore: $e');
+            throw e;
           }
         }
 
@@ -339,9 +309,6 @@ class EditController extends GetxController {
           'vehicleNo': vehicleController.text.trim(),
           'updatedAt': Timestamp.now(),
         });
-
-        // Update current email
-        currentEmail.value = emailController.text.trim();
 
         isEditing.value = false;
         Get.snackbar(

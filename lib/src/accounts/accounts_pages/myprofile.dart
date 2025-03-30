@@ -115,13 +115,13 @@ class Myprofile extends StatelessWidget {
                               TextField(
                                 controller: controller.emailController,
                                 focusNode: controller.emailFocusNode,
-                                enabled: controller.isEditing.value,
+                                enabled: false,
+                                keyboardType: TextInputType.emailAddress,
                                 decoration: InputDecoration(
                                   labelText: 'Email',
-                                  border: const OutlineInputBorder(),
+                                  prefixIcon: const Icon(Icons.email),
                                   errorText: controller.emailError.value.isEmpty ? null : controller.emailError.value,
                                 ),
-                                onChanged: (value) => controller.validateEmail(value),
                               ),
                               const SizedBox(height: 18),
                               TextField(
