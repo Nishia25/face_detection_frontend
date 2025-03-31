@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_intelligence/common/config/app_images.dart';
 import 'package:vision_intelligence/common/widgets/custom_appbar.dart';
-import 'package:vision_intelligence/src/auth/service/auth_service.dart';
+
 import '../accounts_pages/about_us.dart';
 import '../accounts_pages/change_password.dart';
 import '../accounts_pages/contact_us.dart';
 import '../accounts_pages/delete_account.dart';
-import '../accounts_pages/myprofile.dart';
 import '../accounts_pages/terms_conditions.dart';
 import '../controller/account_controller.dart';
 import '../widgets/setting_options.dart';
@@ -54,7 +53,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         title: "My Profile",
                         onTap: () {
-                          Get.to(() => Myprofile());
+                          // Get.to(() => Myprofile());
                         },
                       ),
                       SettingOptions(
@@ -91,7 +90,7 @@ class _AccountPageState extends State<AccountPage> {
                               onChanged: (bool value) {
                                 accountController.lights.value = value;
                               },
-                              activeTrackColor: Colors.indigo,
+                              activeTrackColor: Color.fromRGBO(237, 29, 36, 1),
                             ),
                           );
                         }),
@@ -100,14 +99,12 @@ class _AccountPageState extends State<AccountPage> {
                       _buildSectionTitle("Help & Support"),
                       SizedBox(height: 15,),
                       SettingOptions(
-                        icon: ImageIcon(
-                          AssetImage(AppImages.contact_icon),
-                          color: Colors.black,
-                          size: 24,
+                        icon: Icon(
+                          Icons.person_search_outlined,
                         ),
-                        title: "Emergency Contacts",
+                        title: "About Us",
                         onTap: () {
-                          Get.to(() => ContactUs());
+                          Get.to(() => AboutUs());
                         },
                       ),
                       SettingOptions(
@@ -120,12 +117,14 @@ class _AccountPageState extends State<AccountPage> {
                         },
                       ),
                       SettingOptions(
-                        icon: Icon(
-                          Icons.person_search_outlined,
+                        icon: ImageIcon(
+                          AssetImage(AppImages.contact_icon),
+                          color: Colors.black,
+                          size: 24,
                         ),
-                        title: "About Us",
+                        title: "Contact Us",
                         onTap: () {
-                          Get.to(() => AboutUs());
+                          Get.to(() => ContactUs());
                         },
                       ),
                       SettingOptions(
@@ -136,7 +135,33 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                           title: "Logout",
                           onTap : () {
-                            // signOut();
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Logout'),
+                                  content: const Text('Are you sure you want to logout?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        accountController.signOut();
+                                      },
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.red,
+                                      ),
+                                      child: const Text('Logout'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           }
                       )
                     ],
