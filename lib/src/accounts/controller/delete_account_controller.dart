@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vision_intelligence/src/auth/view/signin_screen.dart';
 
 class DeleteAccountController extends GetxController {
   final RxBool isLoading = false.obs;
@@ -27,7 +28,7 @@ class DeleteAccountController extends GetxController {
         await prefs.clear();
 
         // Navigate to login screen
-        Get.offAllNamed('/login');
+        Get.off(SignInScreen());
       }
     } on FirebaseAuthException catch (e) {
       String message = 'Failed to delete account';

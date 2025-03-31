@@ -91,7 +91,7 @@ class _AccountPageState extends State<AccountPage> {
                               onChanged: (bool value) {
                                 accountController.lights.value = value;
                               },
-                              activeTrackColor: Color.fromRGBO(237, 29, 36, 1),
+                              activeTrackColor: Colors.indigo,
                             ),
                           );
                         }),
@@ -100,12 +100,14 @@ class _AccountPageState extends State<AccountPage> {
                       _buildSectionTitle("Help & Support"),
                       SizedBox(height: 15,),
                       SettingOptions(
-                        icon: Icon(
-                          Icons.person_search_outlined,
+                        icon: ImageIcon(
+                          AssetImage(AppImages.contact_icon),
+                          color: Colors.black,
+                          size: 24,
                         ),
-                        title: "About Us",
+                        title: "Emergency Contacts",
                         onTap: () {
-                          Get.to(() => AboutUs());
+                          Get.to(() => ContactUs());
                         },
                       ),
                       SettingOptions(
@@ -118,14 +120,12 @@ class _AccountPageState extends State<AccountPage> {
                         },
                       ),
                       SettingOptions(
-                        icon: ImageIcon(
-                          AssetImage(AppImages.contact_icon),
-                          color: Colors.black,
-                          size: 24,
+                        icon: Icon(
+                          Icons.person_search_outlined,
                         ),
-                        title: "Contact Us",
+                        title: "About Us",
                         onTap: () {
-                          Get.to(() => ContactUs());
+                          Get.to(() => AboutUs());
                         },
                       ),
                       SettingOptions(

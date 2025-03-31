@@ -40,7 +40,7 @@ class DeleteAccount extends StatelessWidget {
                       const Icon(
                         Icons.warning_amber_rounded,
                         size: 80,
-                        color: Colors.red,
+                        color: Colors.blueAccent,
                       ),
                       const SizedBox(height: 20),
                       const Text(
@@ -48,7 +48,7 @@ class DeleteAccount extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                          color: Colors.blue,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -82,7 +82,7 @@ class DeleteAccount extends StatelessWidget {
                           ElevatedButton(
                             onPressed: () => controller.showDeleteConfirmation(context),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
+                              backgroundColor: Colors.indigo,
                               foregroundColor: Colors.white,
                               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                               shape: RoundedRectangleBorder(
