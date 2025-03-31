@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_intelligence/common/config/app_images.dart';
 import 'package:vision_intelligence/common/widgets/custom_appbar.dart';
+import 'package:vision_intelligence/src/accounts/accounts_pages/myprofile.dart';
 
 import '../accounts_pages/about_us.dart';
 import '../accounts_pages/change_password.dart';
@@ -53,7 +54,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         title: "My Profile",
                         onTap: () {
-                          // Get.to(() => Myprofile());
+                          Get.to(() => Myprofile());
                         },
                       ),
                       SettingOptions(
@@ -90,7 +91,7 @@ class _AccountPageState extends State<AccountPage> {
                               onChanged: (bool value) {
                                 accountController.lights.value = value;
                               },
-                              activeTrackColor: Color.fromRGBO(237, 29, 36, 1),
+                              activeTrackColor: Colors.indigo,
                             ),
                           );
                         }),
@@ -122,7 +123,7 @@ class _AccountPageState extends State<AccountPage> {
                           color: Colors.black,
                           size: 24,
                         ),
-                        title: "Contact Us",
+                        title: "Emergency Contacts",
                         onTap: () {
                           Get.to(() => ContactUs());
                         },

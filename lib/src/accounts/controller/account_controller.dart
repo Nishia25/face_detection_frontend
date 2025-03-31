@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:vision_intelligence/src/auth/view/signin_screen.dart';
 
 class AccountController extends GetxController{
   RxBool lights = false.obs;
@@ -9,7 +10,7 @@ class AccountController extends GetxController{
     try {
       await FirebaseAuth.instance.signOut();
       await Get.deleteAll();
-      Get.offAllNamed('/login');
+      Get.off(SignInScreen());
     } catch (e) {
       Get.snackbar(
         'Error',
