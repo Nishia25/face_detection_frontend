@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vision_intelligence/common/config/app_images.dart';
+import 'package:vision_intelligence/common/controller/userdata_controller.dart';
 import 'package:vision_intelligence/common/widgets/appbar.dart';
 import '../controller/contact_us_controller.dart';
-import '../../../common/constants/app_images.dart';
 
-class ContactUs extends StatelessWidget {
+class ContactUs extends StatefulWidget {
   const ContactUs({super.key});
 
   @override
+  State<ContactUs> createState() => _ContactUsState();
+}
+
+class _ContactUsState extends State<ContactUs> {
+  @override
   Widget build(BuildContext context) {
+    UserdataController userdataController = Get.find();
     final ContactUsController controller = Get.put(ContactUsController());
 
     return Scaffold(
@@ -34,39 +41,40 @@ class ContactUs extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
                   'Emergency Contacts',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.indigo,
+                    color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 _buildContactCard(
                   context,
                   controller,
                   'Driver',
-                  AppImages.driver,
-                  '100',
-                  Colors.blue,
+                   AppImages.driver_icon,
+                   userdataController.userPhone.value,
+                  Colors.green,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 _buildContactCard(
                   context,
                   controller,
                   'Police',
-                  AppImages.police,
+                  AppImages.police_icon,
                   '100',
-                  Colors.red,
+                  Colors.green,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 _buildContactCard(
                   context,
                   controller,
                   'Ambulance',
-                  AppImages.ambulance,
+                  AppImages.ambulance_icon,
                   '108',
                   Colors.green,
                 ),

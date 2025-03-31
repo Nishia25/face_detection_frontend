@@ -8,7 +8,6 @@ class ContactUsController extends GetxController {
       scheme: 'tel',
       path: phoneNumber,
     );
-    
     if (await canLaunchUrl(launchUri)) {
       await launchUrl(launchUri);
     } else {

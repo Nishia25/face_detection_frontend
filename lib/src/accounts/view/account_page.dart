@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vision_intelligence/common/config/app_images.dart';
 import 'package:vision_intelligence/common/widgets/custom_appbar.dart';
-
+import 'package:vision_intelligence/src/auth/service/auth_service.dart';
 import '../accounts_pages/about_us.dart';
 import '../accounts_pages/change_password.dart';
 import '../accounts_pages/contact_us.dart';
