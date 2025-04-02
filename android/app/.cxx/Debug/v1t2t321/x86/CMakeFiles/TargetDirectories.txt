@@ -1,0 +1,2 @@
+D:/8th-sem-Collage_project/face_detection_frontend/android/app/.cxx/Debug/v1t2t321/x86/CMakeFiles/edit_cache.dir
+D:/8th-sem-Collage_project/face_detection_frontend/android/app/.cxx/Debug/v1t2t321/x86/CMakeFiles/rebuild_cache.dir

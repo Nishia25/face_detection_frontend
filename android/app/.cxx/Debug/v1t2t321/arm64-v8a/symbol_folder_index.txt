@@ -1,0 +1,1 @@
+D:\8th-sem-Collage_project\face_detection_frontend\build\app\intermediates\cxx\Debug\v1t2t321\obj\arm64-v8a
