@@ -60,16 +60,20 @@ class _CustomAppbarState extends State<CustomAppbar> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 40,
-              backgroundImage: (imagePath != null && File(imagePath!).existsSync())
-                  ? FileImage(File(imagePath!))
-                  : null,
-              backgroundColor: Colors.grey[300],
-              child: (imagePath == null || !File(imagePath!).existsSync())
-                  ? const Icon(Icons.camera_alt, color: Colors.white)
-                  : null,
-            ),
+            Obx(() {  // 🔹 Obx ke andar wrap kar diya hai
+              return CircleAvatar(
+                radius: 40,
+                backgroundImage: (userdataController.userProfileImage.value.isNotEmpty &&
+                    File(userdataController.userProfileImage.value).existsSync())
+                    ? FileImage(File(userdataController.userProfileImage.value))
+                    : null,
+                backgroundColor: Colors.grey[300],
+                child: (userdataController.userProfileImage.value.isEmpty ||
+                    !File(userdataController.userProfileImage.value).existsSync())
+                    ? const Icon(Icons.camera_alt, color: Colors.white)
+                    : null,
+              );
+            }),
             const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

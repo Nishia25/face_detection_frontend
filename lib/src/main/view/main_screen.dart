@@ -12,7 +12,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  MainController mainController = Get.find<MainController>();
+  MainController mainController = Get.put(MainController());
 
   @override
   void initState() {

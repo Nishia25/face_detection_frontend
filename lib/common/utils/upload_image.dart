@@ -1,7 +1,11 @@
 import 'dart:io';
+import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:hive/hive.dart';
+
+import '../controller/userdata_controller.dart';
 
 class UploadImage {
   final ImagePicker _picker = ImagePicker();
@@ -15,17 +19,21 @@ class UploadImage {
   }
 
   Future<File> _saveImageLocally(File imageFile) async {
-    final directory = await getApplicationDocumentsDirectory(); // Local directory
-    final path = "${directory.path}/profile_image.jpg"; // Image ka path set karein
-    final File localImage = await imageFile.copy(path); // Image ko local storage me save karein
+    final directory = await getApplicationDocumentsDirectory();
+    final path = "${directory.path}/profile_image.jpg";
+    final File localImage = await imageFile.copy(path);
 
     var box = await Hive.openBox('userBox');
-    String? userId = box.get('user_id'); // Fetch stored userId
+    String? userId = box.get('user_id');
     if (userId != null) {
-      await _saveImagePathToHive(userId, path); // Save with userId
+      await _saveImagePathToHive(userId, path);
     } else {
-      await _saveImagePathToHive("default", path); // Fallback if no userId
+      await _saveImagePathToHive("default", path);
     }
+
+    // 🔹 UserdataController ko update karein (UI refresh hoga)
+    final userdataController = Get.find<UserdataController>();
+    userdataController.updateProfileImage(path);
 
     return localImage;
   }

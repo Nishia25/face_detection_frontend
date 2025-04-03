@@ -1,22 +1,59 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:hive/hive.dart';
+import 'package:vision_intelligence/common/controller/userdata_controller.dart';
+import '../../../common/utils/hive_helper.dart';
+import '../../../common/utils/upload_image.dart';
 import '../controller/edit_controller.dart';
 import '../../../common/widgets/appbar.dart';
 
-import '../../../common/config/app_images.dart';
-import '../../../common/utils/upload_image.dart';
 
-class Myprofile extends StatelessWidget {
+class Myprofile extends StatefulWidget {
   const Myprofile({super.key});
 
   @override
+  State<Myprofile> createState() => _MyprofileState();
+}
+
+class _MyprofileState extends State<Myprofile> {
+  UserdataController userdataController = Get.put(UserdataController());
+  final UploadImage _uploadImage = UploadImage();
+  String? imagePath;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileImage();
+    userdataController.fetchUserData(); // Ensure local & Firestore image loads
+  }
+
+
+  Future<void> _loadProfileImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('user_id');
+
+    if (userId != null) {
+      String? savedPath = _uploadImage.getSavedProfileImage(userId);
+      if (savedPath != null && File(savedPath).existsSync()) {
+        if (mounted) {
+          setState(() {
+            imagePath = savedPath;
+          });
+        }
+      } else {
+        debugPrint("Saved profile image not found.");
+      }
+    } else {
+      debugPrint("User ID not found");
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
+
     final EditController controller = Get.put(EditController());
 
     return SafeArea(
@@ -63,35 +100,38 @@ class Myprofile extends StatelessWidget {
                             onTap: controller.isEditing.value ? controller.pickAndUploadImage : null,
                             child: Stack(
                               children: [
-                                Obx(() => CircleAvatar(
-                                  backgroundImage: controller.image.value != null
-                                      ? FileImage(controller.image.value!)
-                                      : (controller.imageUrl.value.isNotEmpty
-                                          ? NetworkImage(controller.imageUrl.value) as ImageProvider
-                                          : null),
-                                  backgroundColor: Colors.grey[300],
-                                  radius: 70.5,
-                                  child: (controller.image.value == null && controller.imageUrl.value.isEmpty)
-                                      ? const Icon(Icons.camera_alt, color: Colors.white)
-                                      : null,
-                                )),
+                                Obx(() {
+                                  String? localImagePath = HiveHelper().getSavedProfileImage(userdataController.userId ??"");
+                                  return CircleAvatar(
+                                    backgroundImage: (userdataController.userProfileImage.value.isNotEmpty &&
+                                        File(userdataController.userProfileImage.value).existsSync())
+                                        ? FileImage(File(userdataController.userProfileImage.value))
+                                        : null,
+                                    backgroundColor: Colors.grey[300],
+                                    radius: 70.5,
+                                    child: (userdataController.userProfileImage.value.isEmpty ||
+                                        !File(userdataController.userProfileImage.value).existsSync())
+                                        ? const Icon(Icons.camera_alt, color: Colors.white)
+                                        : null,
+                                  );
+                                }),
                                 Obx(() => controller.isEditing.value
                                     ? Positioned(
-                                        bottom: 0,
-                                        right: 10,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(4),
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: const Icon(
-                                            Icons.camera_alt,
-                                            color: Colors.white,
-                                            size: 30,
-                                          ),
-                                        ),
-                                      )
+                                  bottom: 0,
+                                  right: 10,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.black,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.camera_alt,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
+                                  ),
+                                )
                                     : const SizedBox.shrink()),
                               ],
                             ),

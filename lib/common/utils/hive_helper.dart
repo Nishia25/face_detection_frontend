@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hive/hive.dart';
 
 class HiveHelper {
@@ -8,8 +10,13 @@ class HiveHelper {
     await box.put('profileImage', imageUrl);
   }
 
-  static String? getProfileImage() {
-    var box = Hive.box(boxName);
-    return box.get('profileImage');
+  String? getSavedProfileImage(String userId) {
+    final box = Hive.box('userBox');
+    String? path = box.get('profile_image_$userId');
+    if (path != null && File(path).existsSync()) {
+      return path;
+    }
+    return null;
   }
+
 }

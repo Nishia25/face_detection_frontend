@@ -6,9 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hive/hive.dart';
+import 'package:vision_intelligence/common/controller/userdata_controller.dart';
 import '../../../common/utils/upload_image.dart';
 
 class EditController extends GetxController {
+  UserdataController userdataController = Get.put(UserdataController());
   final UploadImage _uploadImage = UploadImage();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   
@@ -152,7 +154,7 @@ class EditController extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userId = prefs.getString('user_id');
-      
+
       if (userId != null) {
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
@@ -161,7 +163,7 @@ class EditController extends GetxController {
 
         if (userDoc.exists) {
           Map<String, dynamic> data = userDoc.data() as Map<String, dynamic>;
-          
+
           fnameController.text = data['name'] ?? '';
           emailController.text = data['email'] ?? '';
           currentEmail.value = data['email'] ?? '';
@@ -170,11 +172,14 @@ class EditController extends GetxController {
           vehicleController.text = data['vehicleNo'] ?? '';
           imageUrl.value = data['profileImageUrl'] ?? '';
 
-          // Load profile image from Hive
+          // ✅ Fetch from Hive if available
           var box = await Hive.openBox('userBox');
           String? savedPath = box.get('profile_image_$userId');
-          if (savedPath != null) {
+
+          if (savedPath != null && File(savedPath).existsSync()) {
             image.value = File(savedPath);
+          } else if (imageUrl.value.isNotEmpty) {
+            image.value = null; // Reset so the network image loads
           }
         }
       }
@@ -188,6 +193,7 @@ class EditController extends GetxController {
     }
   }
 
+
   Future<void> pickAndUploadImage() async {
     try {
       File? imageFile = await _uploadImage.pickImage();
@@ -195,10 +201,9 @@ class EditController extends GetxController {
         isLoading.value = true;
         image.value = imageFile;
 
-        // Upload image to Firebase Storage
         final prefs = await SharedPreferences.getInstance();
         final userId = prefs.getString('user_id');
-        
+
         if (userId != null) {
           final storageRef = FirebaseStorage.instance
               .ref()
@@ -208,17 +213,20 @@ class EditController extends GetxController {
           await storageRef.putFile(imageFile);
           final downloadUrl = await storageRef.getDownloadURL();
 
-          // Update Firestore with new image URL
+          // ✅ Save in Firestore
           await FirebaseFirestore.instance
               .collection('users')
               .doc(userId)
               .update({'profileImageUrl': downloadUrl});
 
-          // Save locally in Hive
+          // ✅ Save in Hive for offline use
           var box = await Hive.openBox('userBox');
           await box.put('profile_image_$userId', imageFile.path);
 
           imageUrl.value = downloadUrl;
+
+          // ✅ Refresh Profile Image in the AppBar
+          Get.find<UserdataController>().updateProfileImage(imageFile.path);
         }
       }
     } catch (e) {
@@ -232,6 +240,8 @@ class EditController extends GetxController {
       isLoading.value = false;
     }
   }
+
+
 
   Future<void> updateUserData() async {
     if (!validateAllFields()) {
@@ -294,7 +304,7 @@ class EditController extends GetxController {
             );
           } catch (e) {
             print('Error updating email in Firestore: $e');
-            throw e;
+            rethrow;
           }
         }
 

@@ -20,7 +20,7 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  AccountController accountController = Get.find<AccountController>();
+  AccountController accountController = Get.put(AccountController());
 
   @override
   Widget build(BuildContext context) {
