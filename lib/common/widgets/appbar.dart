@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 
 class Appbar extends StatelessWidget implements PreferredSizeWidget {
@@ -28,7 +27,7 @@ class Appbar extends StatelessWidget implements PreferredSizeWidget {
       toolbarHeight: 80,
       title: Text(
         title,
-        style: GoogleFonts.poppins(
+        style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w400,
           color: Colors.white,

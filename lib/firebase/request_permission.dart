@@ -69,6 +69,7 @@ Future<void> updateFCMToken([String? newToken]) async {
 
   if (storedToken == token) {
     print("ℹ️ Token is the same, no need to update.");
+    print("FCM token: $token");
     return;
   }
 

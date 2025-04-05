@@ -25,6 +25,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox('userBox');
+  await Hive.openBox('screenshotsBox');
+  // LocalNotificationService.initialize(Get.context!);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -45,6 +47,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // LocalNotificationService.initialize(context);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Face Vision Intelligence',

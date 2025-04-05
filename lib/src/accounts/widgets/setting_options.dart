@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class SettingOptions extends StatelessWidget {
   const SettingOptions({super.key, required this.icon, required this.title, this.trailing, this.onTap,});
@@ -33,7 +32,7 @@ class SettingOptions extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: GoogleFonts.poppins(
+                  style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       color: Color.fromRGBO(26, 32, 44, 1)
