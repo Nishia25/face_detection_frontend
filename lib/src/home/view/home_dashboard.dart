@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
+import 'package:get/get.dart';
 import 'package:vision_intelligence/common/widgets/custom_appbar.dart';
+import 'package:vision_intelligence/src/home/controller/home_controller.dart';
 
 class HomeDashboard extends StatefulWidget {
   const HomeDashboard({super.key});
@@ -11,7 +13,7 @@ class HomeDashboard extends StatefulWidget {
 }
 
 class _HomeDashboardState extends State<HomeDashboard> {
-
+  final HomeController homeController = Get.find();
   @override
   void initState() {
     super.initState();
@@ -27,12 +29,46 @@ class _HomeDashboardState extends State<HomeDashboard> {
           color: Colors.black,
           child: Column(
             children: [
-              CustomAppbar(
-                icon: Icons.notifications,
-                onPressed: () {
-                  print("Settings button pressed");
-                },
-              ),
+              Obx(() {
+                final count = homeController.notificationCount.value;
+                return Stack(
+                  children: [
+                    CustomAppbar(
+                      icon: Icons.notifications,
+                      onPressed: () {
+                        print("Settings button pressed");
+                        homeController.resetNotificationCount();
+                        Get.snackbar(
+                            "Notification clean",
+                             "All old notification are clean successfully ",
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                          margin: EdgeInsets.all(12),
+                          duration: Duration(seconds: 3),
+                          icon: Icon(Icons.delete_sweep, color: Colors.white),
+                        );
+                      },
+                    ),
+                    if (count > 0)
+                      Positioned(
+                        right: 15,
+                        top: 22,
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            '$count',
+                            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              }),
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -100,6 +136,17 @@ class _HomeDashboardState extends State<HomeDashboard> {
                               ),
                             ),
                           ),
+                          SizedBox(height: 30,),
+                          Obx(() {
+                            final title = homeController.latestNotificationTitle.value;
+                            if (title.isEmpty) return SizedBox.shrink();
+                            return Center(
+                               child: Text(
+                                 title,
+                                 style: TextStyle(color: Colors.red, fontSize: 40, fontWeight: FontWeight.w500),
+                               ),
+                            );
+                          })
                         ],
                       ),
                     ),

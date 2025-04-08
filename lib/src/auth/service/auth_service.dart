@@ -6,6 +6,7 @@ import 'package:vision_intelligence/firebase/request_permission.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final notificationService = NotificationService();
 
   // 🔹 Sign up with Email & Password
   Future<User?> createUserWithEmailAndPassword(String email,
@@ -29,7 +30,7 @@ class AuthService {
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      await updateFCMToken();
+      await notificationService.updateFCMToken();
       await saveUserSession(userCredential.user);
       return userCredential.user;
     } catch (e) {

@@ -6,6 +6,7 @@ import 'package:vision_intelligence/src/auth/view/signup_screen.dart';
 import 'package:vision_intelligence/src/auth/widgets/formtextfield.dart';
 import 'package:vision_intelligence/src/main/view/main_screen.dart';
 import '../../../common/theme/theme.dart';
+import '../../../firebase/request_permission.dart';
 import '../service/auth_service.dart';
 import '../widgets/custom_scaffold.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +21,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final _auth = AuthService();
   final _formSignInKey = GlobalKey<FormState>();
+  final notificationService = NotificationService();
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -169,6 +171,8 @@ class _SignInScreenState extends State<SignInScreen> {
 
                                     if (user != null) {
                                       debugPrint("User Logged In");
+                                      await notificationService.updateFCMToken();
+                                      await notificationService.registerFcmTokenWithBackend();
                                       Get.offAll(() => MainScreen());
                                     }
                                   } on FirebaseAuthException catch (e) {

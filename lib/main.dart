@@ -14,7 +14,9 @@ import 'package:vision_intelligence/src/home/controller/home_controller.dart';
 import 'package:vision_intelligence/src/main/controller/main_controller.dart';
 import 'package:vision_intelligence/src/main/view/main_screen.dart';
 
+import 'firebase/local_notification_service.dart';
 import 'firebase_options.dart';
+
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -26,14 +28,13 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('userBox');
   await Hive.openBox('screenshotsBox');
-  // LocalNotificationService.initialize(Get.context!);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  Get.put(HomeController());
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  requestPermission();
+  await NotificationService().requestPermissionAndInit();
 
   final authService = AuthService();
   final bool isLoggedIn = await authService.isUserLoggedIn();
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // LocalNotificationService.initialize(context);
+    LocalNotificationService.initialize(context);
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Face Vision Intelligence',

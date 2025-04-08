@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:vision_intelligence/common/config/app_images.dart';
 import 'package:vision_intelligence/common/widgets/custom_appbar.dart';
+import 'package:vision_intelligence/firebase/request_permission.dart';
 import 'package:vision_intelligence/src/accounts/accounts_pages/myprofile.dart';
 
 import '../accounts_pages/about_us.dart';
@@ -21,6 +23,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   AccountController accountController = Get.put(AccountController());
+  final notificationService = NotificationService();
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +91,16 @@ class _AccountPageState extends State<AccountPage> {
                             scale: 0.8,
                             child: Switch.adaptive(
                               value: accountController.lights.value,
-                              onChanged: (bool value) {
-                                accountController.lights.value = value;
+                              onChanged: (bool value) async {
+                                if (value) {
+                                  // 🔓 Request permission
+                                  final status = await accountController.requestNotificationPermission(); // Custom method below
+                                  accountController.lights.value = status;
+                                } else {
+                                  // ❌ Open app settings to let user turn it off manually
+                                  await openAppSettings();
+                                  accountController.lights.value = false; // reset based on user's action
+                                }
                               },
                               activeTrackColor: Colors.indigo,
                             ),
