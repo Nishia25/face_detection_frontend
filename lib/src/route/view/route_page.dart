@@ -16,6 +16,9 @@ class _RoutePageState extends State<RoutePage> {
   LatLng? driverLatLng;
   String driverAddress = 'Fetching location...';
 
+  // Default fallback location
+  final LatLng defaultLatLng = LatLng(23.0641, 72.4397);
+
   @override
   void initState() {
     super.initState();
@@ -24,7 +27,8 @@ class _RoutePageState extends State<RoutePage> {
   }
 
   Future<void> fetchAddressFromCoordinates(double lat, double lng) async {
-    final url = Uri.parse('https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng');
+    final url = Uri.parse(
+        'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng');
 
     try {
       final response = await http.get(url, headers: {
@@ -55,9 +59,22 @@ class _RoutePageState extends State<RoutePage> {
     }
   }
 
-
   Future<void> fetchDriverLocation() async {
     print("[DEBUG] Fetching driver location...");
+
+    bool locationFetched = false;
+
+    // Start timeout fallback
+    Future.delayed(const Duration(seconds: 5), () async {
+      if (!locationFetched && mounted) {
+        print("[TIMEOUT] Location not received in 20 seconds. Using default.");
+        setState(() {
+          driverLatLng = defaultLatLng;
+        });
+        await fetchAddressFromCoordinates(defaultLatLng.latitude, defaultLatLng.longitude);
+      }
+    });
+
     try {
       final response = await http.get(Uri.parse('http://192.168.1.97:5000/location'));
       print("[DEBUG] Response status: ${response.statusCode}");
@@ -74,24 +91,17 @@ class _RoutePageState extends State<RoutePage> {
           driverLatLng = LatLng(lat, lng);
         });
 
-        // Fetch address after setting coordinates
+        locationFetched = true;
         await fetchAddressFromCoordinates(lat, lng);
-      }
-
-    else {
+      } else {
         debugPrint("[ERROR] Received null for lat/lng");
-        setState(() {
-          driverAddress = "Invalid location data received";
-        });
       }
 
     } catch (e) {
       print("[EXCEPTION] Error fetching location: $e");
-      setState(() {
-        driverAddress = "Error: $e";
-      });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +139,14 @@ class _RoutePageState extends State<RoutePage> {
                           ),
                           children: [
                             TileLayer(
-                              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                              urlTemplate:
+                              "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                               subdomains: ['a', 'b', 'c'],
                               tileProvider: NetworkTileProvider(),
-                              userAgentPackageName: 'com.example.vision_intelligence',
-                              errorImage: const AssetImage('assets/images/map_error.png'),
-                              // Use try/catch or log load failures
+                              userAgentPackageName:
+                              'com.example.vision_intelligence',
+                              errorImage:
+                              const AssetImage('assets/images/map_error.png'),
                             ),
                             MarkerLayer(
                               markers: [
@@ -143,8 +155,10 @@ class _RoutePageState extends State<RoutePage> {
                                   width: 50,
                                   height: 50,
                                   builder: (ctx) {
-                                    print("[DEBUG] Marker displayed at $driverLatLng");
-                                    return const Icon(Icons.location_on, color: Colors.red, size: 40);
+                                    print(
+                                        "[DEBUG] Marker displayed at $driverLatLng");
+                                    return const Icon(Icons.location_on,
+                                        color: Colors.red, size: 40);
                                   },
                                 ),
                               ],
@@ -156,12 +170,15 @@ class _RoutePageState extends State<RoutePage> {
                       const Center(child: CircularProgressIndicator()),
                     Align(
                       alignment: Alignment.topCenter,
-                      child: Text(
-                        "Driver's Live Location",
-                        style: TextStyle(
-                          fontSize: 40,
-                          // fontFamily: FontWeight.w800,
-                          color: Colors.black
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text(
+                          "Driver's Live Location",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
@@ -169,7 +186,8 @@ class _RoutePageState extends State<RoutePage> {
                       alignment: Alignment.bottomCenter,
                       child: Container(
                         margin: const EdgeInsets.all(20),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
                           color: Colors.indigo,
                           borderRadius: BorderRadius.circular(15),
@@ -189,10 +207,9 @@ class _RoutePageState extends State<RoutePage> {
                               child: Text(
                                 driverAddress,
                                 style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white
-                                ),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
                               ),
                             ),
                           ],
